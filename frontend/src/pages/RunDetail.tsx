@@ -103,7 +103,7 @@ export function RunDetail() {
       <p className="text-red-500 font-medium">{i18n.t("runDetail.runNotFound")}</p>
       <p className="text-sm text-muted-foreground">
         {i18n.t("runDetail.runNotFoundDesc")}, or your browser may not have API access configured.
-        Check that the API authentication key is set in Settings if accessing remotely.
+        如果是远程访问，请检查“设置”中的 API 认证密钥是否已配置。
       </p>
       <button
         onClick={() => navigate(-1)}
@@ -130,7 +130,7 @@ export function RunDetail() {
           </button>
           {ok ? <CheckCircle2 className="h-5 w-5 text-success" /> : <XCircle className="h-5 w-5 text-danger" />}
           <h1 className="font-mono text-sm font-medium">{runId}</h1>
-          {run.elapsed_seconds && <span className="text-xs text-muted-foreground">{run.elapsed_seconds.toFixed(1)}s</span>}
+          {run.elapsed_seconds && <span className="text-xs text-muted-foreground">{run.elapsed_seconds.toFixed(1)}秒</span>}
         </div>
         {run.prompt && <p className="text-sm text-muted-foreground">{run.prompt}</p>}
         {run.metrics && <MetricsCard metrics={run.metrics as Record<string, number>} />}
@@ -156,7 +156,7 @@ export function RunDetail() {
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs text-muted-foreground hover:bg-muted transition-colors"
                 title={i18n.t("runDetail.downloadTradesCsv")}
               >
-                <Download className="h-3.5 w-3.5" /> Download Trades CSV
+                <Download className="h-3.5 w-3.5" /> {i18n.t("runDetail.downloadTradesCsv")}
               </button>
             )}
             {run.metrics && (
@@ -165,7 +165,7 @@ export function RunDetail() {
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs text-muted-foreground hover:bg-muted transition-colors"
                 title={i18n.t("runDetail.downloadMetricsCsv")}
               >
-                <Download className="h-3.5 w-3.5" /> Download Metrics CSV
+                <Download className="h-3.5 w-3.5" /> {i18n.t("runDetail.downloadMetricsCsv")}
               </button>
             )}
           </div>
@@ -198,7 +198,7 @@ function RunCardTab({ card }: { card: RunCard }) {
       <div className="grid gap-3 md:grid-cols-4">
         <RunCardStat label={i18n.t("runDetail.schema")} value={card.schema_version || "unknown"} />
         <RunCardStat label={i18n.t("runDetail.generated")} value={formatRunCardValue(card.generated_at)} />
-        <RunCardStat label={i18n.t("runDetail.dataSources")} value={dataSources.length ? dataSources.join(", ") : "None recorded"} />
+        <RunCardStat label={i18n.t("runDetail.dataSources")} value={dataSources.length ? dataSources.join(", ") : "未记录"} />
         <RunCardStat label={i18n.t("runDetail.warnings")} value={String(warnings.length)} tone={warnings.length ? "warning" : "normal"} />
       </div>
 
@@ -206,7 +206,7 @@ function RunCardTab({ card }: { card: RunCard }) {
         <section className="rounded-md border border-amber-500/25 bg-amber-500/5 p-3">
           <div className="mb-2 flex items-center gap-2 text-sm font-medium text-amber-700 dark:text-amber-300">
             <AlertTriangle className="h-4 w-4" />
-            Warnings
+            警告
           </div>
           <ul className="space-y-1 text-xs text-muted-foreground">
             {warnings.map((warning, index) => <li key={index}>{warning}</li>)}

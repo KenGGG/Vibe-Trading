@@ -137,6 +137,11 @@ export const api = {
       method: "PUT",
       body: JSON.stringify(settings),
     }),
+  getAShareDataStatus: () => request<AShareDataStatus>("/settings/a-share-data"),
+  updateAShareData: () =>
+    request<AShareDataUpdateResponse>("/settings/a-share-data/update", {
+      method: "POST",
+    }),
 
   // Alpha Zoo API
   listAlphas: (params: AlphaListParams = {}) => {
@@ -270,6 +275,85 @@ export interface DataSourceSettings {
 export interface UpdateDataSourceSettingsRequest {
   tushare_token?: string;
   clear_tushare_token?: boolean;
+}
+
+export interface AShareDatabaseTableStatus {
+  name: string;
+  latest_trade_date?: string | null;
+  row_count: number;
+}
+
+export interface AShareLocalDatabaseStatus {
+  available: boolean;
+  path: string;
+  command_available: boolean;
+  repo_ready: boolean;
+  branch?: string | null;
+  clean?: boolean | null;
+  message: string;
+  preferred_table?: string | null;
+  latest_trade_date?: string | null;
+  tables: AShareDatabaseTableStatus[];
+}
+
+export interface AShareNetworkComponentStatus {
+  name: string;
+  available: boolean;
+  detail: string;
+  latest_trade_date?: string | null;
+}
+
+export interface AShareLayerProviderStatus {
+  name: string;
+  role: string;
+  integrated: boolean;
+  callable: boolean;
+  verified: boolean;
+  detail: string;
+  latest_trade_date?: string | null;
+}
+
+export interface AShareLayerStatus {
+  key: string;
+  name: string;
+  description: string;
+  capabilities: string[];
+  integrated: boolean;
+  callable: boolean;
+  verified: boolean;
+  providers: AShareLayerProviderStatus[];
+  notes: string;
+}
+
+export interface AShareIntegrationSummary {
+  total_layers: number;
+  integrated_layers: number;
+  callable_layers: number;
+  verified_layers: number;
+  message: string;
+}
+
+export interface AShareNetworkSourceStatus {
+  available: boolean;
+  latest_trade_date?: string | null;
+  components: AShareNetworkComponentStatus[];
+  layers: AShareLayerStatus[];
+  integration_summary: AShareIntegrationSummary;
+  preferred_usage: Record<string, string>;
+}
+
+export interface AShareDataStatus {
+  as_of: string;
+  local_database: AShareLocalDatabaseStatus;
+  a_stock_data: AShareNetworkSourceStatus;
+  priority: Record<string, string>;
+}
+
+export interface AShareDataUpdateResponse {
+  success: boolean;
+  command: string;
+  output: string;
+  status: AShareDataStatus;
 }
 
 // --- Types matching backend API contracts ---

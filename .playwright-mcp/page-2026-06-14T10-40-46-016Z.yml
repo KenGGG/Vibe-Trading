@@ -1,0 +1,54 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - link "Vibe-Trading" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - img [ref=e7]
+        - text: Vibe-Trading
+      - navigation [ref=e9]:
+        - link "Home" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e11]
+          - text: Home
+        - link "Agent" [ref=e13] [cursor=pointer]:
+          - /url: /agent
+          - img [ref=e14]
+          - text: Agent
+        - link "Runtime" [ref=e17] [cursor=pointer]:
+          - /url: /runtime
+          - img [ref=e18]
+          - text: Runtime
+        - link "Alpha Zoo" [ref=e20] [cursor=pointer]:
+          - /url: /alpha-zoo
+          - img [ref=e21]
+          - text: Alpha Zoo
+        - link "Settings" [ref=e25] [cursor=pointer]:
+          - /url: /settings
+          - img [ref=e26]
+          - text: Settings
+        - link "Correlation Matrix" [ref=e29] [cursor=pointer]:
+          - /url: /correlation
+          - img [ref=e30]
+          - text: Correlation Matrix
+      - generic [ref=e33]:
+        - generic [ref=e34]:
+          - img [ref=e35]
+          - text: Sessions
+        - link "New Chat" [ref=e37] [cursor=pointer]:
+          - /url: /agent
+          - img [ref=e38]
+      - generic [ref=e44]:
+        - generic [ref=e45]:
+          - button "Dark" [ref=e46] [cursor=pointer]:
+            - img [ref=e47]
+            - text: Dark
+          - button "Collapse" [ref=e50] [cursor=pointer]:
+            - img [ref=e51]
+        - generic [ref=e54]:
+          - button "中文" [ref=e55] [cursor=pointer]:
+            - img [ref=e56]
+            - text: 中文
+          - paragraph [ref=e60]: v0.1.9
+    - main [ref=e62]:
+      - generic [ref=e63]: Loading…
+  - region "Notifications alt+T"

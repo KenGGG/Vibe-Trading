@@ -118,7 +118,7 @@ function LiveActionChip({ action }: { action: LiveAction }) {
       <div className="flex-1 min-w-0">
         <div className={["inline-flex max-w-full flex-wrap items-center gap-1.5 rounded-lg border px-2.5 py-1 text-xs", tone].join(" ")}>
           <Icon className="h-3 w-3 shrink-0" />
-          <span className="shrink-0 font-medium uppercase tracking-wide text-[10px]">RUNTIME</span>
+          <span className="shrink-0 font-medium uppercase tracking-wide text-[10px]">运行时</span>
           <span className="shrink-0 font-medium">{liveActionLabel(action)}</span>
           {action.intent_normalized && (
             <span className="truncate text-foreground/80">· {action.intent_normalized}</span>
@@ -1052,7 +1052,7 @@ export function Agent() {
       setAttachment({ filename: result.filename, filePath: result.file_path });
       toast.success(t('agent.uploaded', { filename: result.filename }));
     } catch (err) {
-      toast.error(t('agent.uploadFailed', { error: err instanceof Error ? err.message : 'Unknown error' }));
+      toast.error(t('agent.uploadFailed', { error: err instanceof Error ? err.message : '未知错误' }));
     } finally {
       setUploading(false);
     }
@@ -1449,7 +1449,7 @@ export function Agent() {
               {liveIsHalted ? (
                 <span className="inline-flex items-center gap-1.5 rounded-lg bg-destructive/10 px-2.5 py-1 text-xs font-medium text-destructive">
                   <OctagonX className="h-3 w-3" />
-                  Connector runtime halted
+                  连接器运行时已停止
                 </span>
               ) : (
                 <button
@@ -1457,10 +1457,10 @@ export function Agent() {
                   onClick={handleHaltLive}
                   disabled={halting}
                   className="inline-flex items-center gap-1.5 rounded-lg border border-destructive/40 bg-destructive/5 px-2.5 py-1 text-xs font-medium text-destructive transition-colors hover:bg-destructive/10 disabled:opacity-40"
-                  title="Instantly halt connector runtime activity"
+                  title="立即停止连接器运行时活动"
                 >
                   {halting ? <Loader2 className="h-3 w-3 animate-spin" /> : <OctagonX className="h-3 w-3" />}
-                  Halt connector runtime
+                  停止连接器运行时
                 </button>
               )}
             </div>
@@ -1473,7 +1473,7 @@ export function Agent() {
                 onClick={() => setShowUploadMenu(prev => !prev)}
                 disabled={status === "streaming" || uploading}
                 className="w-9 h-9 rounded-full border flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-colors disabled:opacity-40 shrink-0"
-                title="More options"
+                title="更多选项"
               >
                 <Plus className="h-4 w-4" />
               </button>
@@ -1485,7 +1485,7 @@ export function Agent() {
                     className="w-full px-3 py-2 text-left text-sm hover:bg-muted transition-colors flex items-center gap-2"
                   >
                     <Paperclip className="h-4 w-4" />
-                    Upload PDF document
+                    上传 PDF 文档
                   </button>
                   <div className="border-t my-1" />
                   <button
@@ -1499,20 +1499,20 @@ export function Agent() {
                     className="w-full px-3 py-2 text-left text-sm hover:bg-muted transition-colors flex items-center gap-2"
                   >
                     <Target className="h-4 w-4" />
-                    Research Goal
+                    研究目标
                   </button>
                   <button
                     type="button"
                     onClick={() => {
                       setShowUploadMenu(false);
                       setGoalComposerActive(false);
-                      setSwarmPreset({ name: "auto", title: "Agent Swarm" });
+                      setSwarmPreset({ name: "auto", title: "智能体协作" });
                       inputRef.current?.focus();
                     }}
                     className="w-full px-3 py-2 text-left text-sm hover:bg-muted transition-colors flex items-center gap-2"
                   >
                     <Users className="h-4 w-4" />
-                    Agent Swarm
+                    智能体协作
                   </button>
                   <div className="border-t my-1" />
                   <button
@@ -1524,7 +1524,7 @@ export function Agent() {
                     className="w-full px-3 py-2 text-left text-sm hover:bg-muted transition-colors flex items-center gap-2"
                   >
                     <Landmark className="h-4 w-4" />
-                    Check Trading Connector
+                    检查交易连接器
                   </button>
                   <button
                     type="button"
@@ -1535,7 +1535,7 @@ export function Agent() {
                     className="w-full px-3 py-2 text-left text-sm hover:bg-muted transition-colors flex items-center gap-2"
                   >
                     <Landmark className="h-4 w-4" />
-                    Analyze Connector Portfolio
+                    分析连接器投资组合
                   </button>
                 </div>
               )}
@@ -1581,8 +1581,8 @@ export function Agent() {
               }}
               placeholder={
                 goalComposerActive
-                  ? "Describe the research goal to attach to this session"
-                  : "e.g. Create a dual MA crossover strategy for 000001.SZ, backtest 2024"
+                  ? "描述要附加到当前会话的研究目标"
+                  : "例如：为 000001.SZ 创建双均线交叉策略，并回测 2024 年表现"
               }
               className="flex-1 px-4 py-2.5 rounded-xl border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 transition-shadow resize-none max-h-32 overflow-y-auto"
               disabled={status === "streaming"}

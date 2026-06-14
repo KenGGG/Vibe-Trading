@@ -176,7 +176,7 @@ function BrowseView() {
       })
       .catch((err: unknown) => {
         if (!alive) return;
-        const msg = err instanceof Error ? err.message : "Failed to load alphas";
+        const msg = err instanceof Error ? err.message : "加载因子列表失败";
         toast.error(msg);
         setAlphas([]);
         setTotal(0);
@@ -260,7 +260,7 @@ function BrowseView() {
       <div className="flex flex-col md:flex-row md:items-end gap-3 border rounded-xl p-4 bg-card">
         <div className="flex-1 min-w-0">
           <label htmlFor="alpha-search" className="text-xs text-muted-foreground block mb-1">
-            Search
+            搜索
           </label>
           <div className="relative">
             <Search
@@ -274,20 +274,20 @@ function BrowseView() {
                 setSearch(e.target.value);
                 setVisibleCount(PAGE_SIZE);
               }}
-              placeholder="Filter by id or nickname…"
+              placeholder="按因子 ID 或别名筛选…"
               className="w-full pl-9 pr-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
             />
           </div>
         </div>
         <div className="md:w-40">
-          <label htmlFor="alpha-zoo-filter" className="text-xs text-muted-foreground block mb-1">Zoo</label>
+          <label htmlFor="alpha-zoo-filter" className="text-xs text-muted-foreground block mb-1">因子库</label>
           <select
             id="alpha-zoo-filter"
             value={zooFilter}
             onChange={(e) => setZooFilter(e.target.value)}
             className="w-full px-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
           >
-            <option value="">All zoos</option>
+            <option value="">全部因子库</option>
             {ZOO_CARDS.map((z) => (
               <option key={z.id} value={z.id}>
                 {z.title}
@@ -297,7 +297,7 @@ function BrowseView() {
         </div>
         <div className="md:w-40">
           <label htmlFor="alpha-theme-filter" className="text-xs text-muted-foreground block mb-1">
-            Theme
+            主题
           </label>
           <select
             id="alpha-theme-filter"
@@ -305,7 +305,7 @@ function BrowseView() {
             onChange={(e) => setThemeFilter(e.target.value)}
             className="w-full px-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
           >
-            <option value="">All themes</option>
+            <option value="">全部主题</option>
             {themeOptions.map((tname) => (
               <option key={tname} value={tname}>
                 {tname}
@@ -315,7 +315,7 @@ function BrowseView() {
         </div>
         <div className="md:w-44">
           <label htmlFor="alpha-universe-filter" className="text-xs text-muted-foreground block mb-1">
-            Universe
+            股票池
           </label>
           <select
             id="alpha-universe-filter"
@@ -323,7 +323,7 @@ function BrowseView() {
             onChange={(e) => setUniverseFilter(e.target.value)}
             className="w-full px-3 py-2 rounded-lg border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
           >
-            <option value="">All universes</option>
+            <option value="">全部股票池</option>
             {UNIVERSE_OPTIONS.map((u) => (
               <option key={u.value} value={u.value}>
                 {u.label}
@@ -334,16 +334,16 @@ function BrowseView() {
         <Link
           to={compareHref}
           className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg border text-sm font-medium hover:bg-muted hover:text-foreground transition"
-          title="Tick 2+ alphas below, then compare them head-to-head"
+          title="勾选下方至少 2 个因子后进行对比"
         >
-          <ArrowLeftRight className="h-3.5 w-3.5" aria-hidden="true" /> Compare
+          <ArrowLeftRight className="h-3.5 w-3.5" aria-hidden="true" /> 对比
           {selected.size >= 2 ? ` (${selected.size})` : ""}
         </Link>
         <Link
           to="/alpha-zoo/bench"
           className="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition"
         >
-          <Play className="h-3.5 w-3.5" aria-hidden="true" /> Run benchmark
+          <Play className="h-3.5 w-3.5" aria-hidden="true" /> 运行基准测试
         </Link>
       </div>
 
@@ -351,27 +351,27 @@ function BrowseView() {
       {/* TODO(v0.2): switch to react-window if alpha count exceeds 5000 */}
       <div className="border rounded-xl overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm" aria-label="Alpha catalogue">
-            <caption className="sr-only">Alpha catalogue</caption>
+          <table className="w-full text-sm" aria-label="因子目录">
+            <caption className="sr-only">因子目录</caption>
             <thead>
               <tr className="border-b bg-muted/40">
                 <th className="w-10 px-3 py-2.5">
-                  <span className="sr-only">Select for compare</span>
+                  <span className="sr-only">选择用于对比</span>
                 </th>
                 <th className="text-left px-4 py-2.5 text-muted-foreground">
-                  ID
+                  因子 ID
                 </th>
                 <th className="text-left px-4 py-2.5 text-muted-foreground">
-                  Zoo
+                  因子库
                 </th>
                 <th className="text-left px-4 py-2.5 text-muted-foreground">
-                  Theme
+                  主题
                 </th>
                 <th className="text-left px-4 py-2.5 text-muted-foreground hidden md:table-cell">
-                  Universe
+                  股票池
                 </th>
-                <th className="text-right px-4 py-2.5 text-muted-foreground" title="Predictive half-life: trading days before the signal's edge decays">
-                  Decay (days)
+                <th className="text-right px-4 py-2.5 text-muted-foreground" title="预测衰减半衰期：信号优势衰减所需的交易日数">
+                  衰减期（天）
                 </th>
               </tr>
             </thead>
@@ -380,13 +380,13 @@ function BrowseView() {
                 <tr>
                   <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
                     <Loader2 className="h-4 w-4 animate-spin inline mr-2" aria-hidden="true" />
-                    Loading alphas…
+                    因子加载中…
                   </td>
                 </tr>
               ) : visible.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
-                    No alphas match the current filters.
+                    当前筛选条件下没有匹配的因子。
                   </td>
                 </tr>
               ) : (
@@ -403,7 +403,7 @@ function BrowseView() {
                         type="checkbox"
                         checked={selected.has(a.id)}
                         onChange={() => toggleSelected(a.id)}
-                        aria-label={`Select ${a.id} for compare`}
+                        aria-label={`选择 ${a.id} 用于对比`}
                         className="h-4 w-4 rounded border-input accent-primary cursor-pointer"
                       />
                     </td>
@@ -478,7 +478,7 @@ function DetailView({ alphaId }: DetailProps) {
       })
       .catch((err: unknown) => {
         if (!alive) return;
-        const msg = err instanceof Error ? err.message : "Failed to load alpha";
+        const msg = err instanceof Error ? err.message : "加载因子失败";
         setError(msg);
       })
       .finally(() => {
@@ -492,7 +492,7 @@ function DetailView({ alphaId }: DetailProps) {
   if (loading) {
     return (
       <div className="p-8 flex items-center justify-center text-muted-foreground">
-        <Loader2 className="h-4 w-4 animate-spin mr-2" aria-hidden="true" /> Loading {alphaId}…
+        <Loader2 className="h-4 w-4 animate-spin mr-2" aria-hidden="true" /> 正在加载 {alphaId}…
       </div>
     );
   }
@@ -501,13 +501,13 @@ function DetailView({ alphaId }: DetailProps) {
     return (
       <div className="p-8 max-w-3xl mx-auto space-y-4">
         <Link to="/alpha-zoo" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1">
-          <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" /> Back to Alpha Zoo
+          <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" /> 返回因子库
         </Link>
         <div className="border rounded-xl p-6 bg-card">
           <h2 className="font-semibold text-sm mb-1 flex items-center gap-2">
-            <AlertTriangle className="h-4 w-4 text-warning" aria-hidden="true" /> Could not load alpha
+            <AlertTriangle className="h-4 w-4 text-warning" aria-hidden="true" /> 无法加载该因子
           </h2>
-          <p className="text-sm text-muted-foreground">{error || "Unknown error"}</p>
+          <p className="text-sm text-muted-foreground">{error || "未知错误"}</p>
         </div>
       </div>
     );
@@ -520,7 +520,7 @@ function DetailView({ alphaId }: DetailProps) {
   const firstUniverse = ((meta["universe"] as string[] | undefined) || [])[0] || "";
 
   // Keep period in sync with the BenchView form default so the prefilled
-  // form values match what users see if they click "Run bench" from here.
+  // form values match what users see if they click "Run benchmark" from here.
   const benchHref = firstUniverse
     ? `/alpha-zoo/bench?zoo=${encodeURIComponent(a.zoo)}&universe=${encodeURIComponent(firstUniverse)}&period=2020-2025`
     : `/alpha-zoo/bench?zoo=${encodeURIComponent(a.zoo)}&period=2020-2025`;
@@ -532,14 +532,14 @@ function DetailView({ alphaId }: DetailProps) {
           to="/alpha-zoo"
           className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1"
         >
-          <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" /> Back to Alpha Zoo
+          <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" /> 返回因子库
         </Link>
         <button
           type="button"
           onClick={() => navigate(benchHref)}
           className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-primary text-primary-foreground text-xs font-medium hover:opacity-90 transition"
         >
-          <Play className="h-3.5 w-3.5" aria-hidden="true" /> Run benchmark
+          <Play className="h-3.5 w-3.5" aria-hidden="true" /> 运行基准测试
         </button>
       </div>
 
@@ -562,7 +562,7 @@ function DetailView({ alphaId }: DetailProps) {
       <section className="space-y-2">
         <h2 className="text-sm font-medium text-muted-foreground">{i18n.t("alphaZoo.formula")}</h2>
         <pre className="border rounded-xl bg-muted/30 p-4 overflow-x-auto text-xs leading-relaxed">
-          <code>{formulaLatex || "(no formula provided)"}</code>
+          <code>{formulaLatex || "（未提供公式）"}</code>
         </pre>
       </section>
 
@@ -572,14 +572,14 @@ function DetailView({ alphaId }: DetailProps) {
         <div className="border rounded-xl overflow-hidden">
           <table className="w-full text-sm">
             <tbody>
-              <MetaRow label="Theme" value={metaString(meta, "theme")} />
-              <MetaRow label="Universe" value={metaString(meta, "universe")} />
-              <MetaRow label="Frequency" value={metaString(meta, "frequency")} />
-              <MetaRow label="Decay horizon" value={metaString(meta, "decay_horizon")} />
-              <MetaRow label="Min warm-up bars" value={metaString(meta, "min_warmup_bars")} />
-              <MetaRow label="Requires sector" value={metaString(meta, "requires_sector")} />
-              <MetaRow label="Module path" value={a.module_path || "—"} />
-              <MetaRow label="Notes" value={metaString(meta, "notes")} last />
+              <MetaRow label="主题" value={metaString(meta, "theme")} />
+              <MetaRow label="股票池" value={metaString(meta, "universe")} />
+              <MetaRow label="频率" value={metaString(meta, "frequency")} />
+              <MetaRow label="衰减周期" value={metaString(meta, "decay_horizon")} />
+              <MetaRow label="最小预热 K 线数" value={metaString(meta, "min_warmup_bars")} />
+              <MetaRow label="需要行业字段" value={metaString(meta, "requires_sector")} />
+              <MetaRow label="模块路径" value={a.module_path || "—"} />
+              <MetaRow label="备注" value={metaString(meta, "notes")} last />
             </tbody>
           </table>
         </div>
@@ -590,10 +590,10 @@ function DetailView({ alphaId }: DetailProps) {
         <h2 className="text-sm font-medium text-muted-foreground">{i18n.t("alphaZoo.sourceCode")}</h2>
         <details className="border rounded-xl bg-card group">
           <summary className="cursor-pointer px-4 py-3 text-sm font-medium hover:bg-muted/40 select-none">
-            View source ({(detail.source_code || "").split("\n").length} lines)
+            查看源码（共 {(detail.source_code || "").split("\n").length} 行）
           </summary>
           <pre className="border-t bg-muted/30 p-4 overflow-x-auto text-xs leading-relaxed">
-            <code>{detail.source_code || "(no source available)"}</code>
+            <code>{detail.source_code || "（暂无源码）"}</code>
           </pre>
         </details>
       </section>
@@ -675,13 +675,13 @@ function BenchView() {
       setJobId(res.job_id);
       attachStream(res.job_id);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Failed to start bench";
+      const msg = err instanceof Error ? err.message : "启动基准测试失败";
       // BTC-USDT is single-asset — surface inline rather than as a toast,
       // because the form is the action context and the message includes a
       // concrete suggestion for the user's next step.
       if (msg.toLowerCase().includes("single-asset")) {
         setFormError(
-          `${msg} Try \`sp500\` or \`csi300\` for a meaningful cross-sectional IC.`,
+          `${msg} 建议改用 \`sp500\` 或 \`csi300\`，以获得更有意义的横截面 IC 结果。`,
         );
       } else {
         toast.error(msg);
@@ -753,19 +753,18 @@ function BenchView() {
         to="/alpha-zoo"
         className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1"
       >
-        <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" /> Back to Alpha Zoo
+        <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" /> 返回因子库
       </Link>
 
       <div className="space-y-1">
         <div className="flex items-center gap-2 text-xs text-muted-foreground uppercase tracking-wide">
-          <Play className="h-3.5 w-3.5" aria-hidden="true" /> Benchmark runner
+          <Play className="h-3.5 w-3.5" aria-hidden="true" /> 基准测试
         </div>
         <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
-          Score a zoo on a universe
+          评估因子库在指定股票池上的表现
         </h1>
         <p className="text-sm text-muted-foreground max-w-2xl">
-          Computes IC / IR for every alpha in the selected zoo over the chosen
-          universe and period, then bucketizes them as alive / reversed / dead.
+          计算所选因子库中每个因子在指定股票池与区间上的 IC / IR，并按有效、反转、失效进行分类。
         </p>
       </div>
 
@@ -775,7 +774,7 @@ function BenchView() {
         className="border rounded-xl p-4 bg-card grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-end"
       >
         <div>
-          <label htmlFor="bench-zoo" className="text-xs text-muted-foreground block mb-1">Zoo</label>
+          <label htmlFor="bench-zoo" className="text-xs text-muted-foreground block mb-1">因子库</label>
           <select
             id="bench-zoo"
             value={zoo}
@@ -791,7 +790,7 @@ function BenchView() {
           </select>
         </div>
         <div>
-          <label htmlFor="bench-universe" className="text-xs text-muted-foreground block mb-1">Universe</label>
+          <label htmlFor="bench-universe" className="text-xs text-muted-foreground block mb-1">股票池</label>
           <select
             id="bench-universe"
             value={universe}
@@ -842,11 +841,11 @@ function BenchView() {
           >
             {busy ? (
               <>
-                <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" /> Running…
+                <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" /> 运行中…
               </>
             ) : (
               <>
-                <Play className="h-3.5 w-3.5" aria-hidden="true" /> Run benchmark
+                <Play className="h-3.5 w-3.5" aria-hidden="true" /> 运行基准测试
               </>
             )}
           </button>
@@ -887,7 +886,7 @@ function ProgressPanel({
       <div className="flex items-center justify-between text-xs text-muted-foreground">
         <span className="flex items-center gap-1.5">
           <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" />
-          {jobId ? `Job ${jobId.slice(0, 12)}…` : "Submitting…"}
+          {jobId ? `任务 ${jobId.slice(0, 12)}…` : "提交中…"}
         </span>
         {progress && (
           <span className="font-mono tabular-nums">
@@ -903,7 +902,7 @@ function ProgressPanel({
       </div>
       {progress?.current_alpha_id && (
         <p className="text-xs text-muted-foreground font-mono truncate">
-          Computing: {progress.current_alpha_id}
+          正在计算：{progress.current_alpha_id}
         </p>
       )}
     </div>
@@ -927,7 +926,7 @@ function ResultPanel({ result }: { result: AlphaBenchResult }) {
       backgroundColor: "transparent",
       tooltip: { trigger: "axis", axisPointer: { type: "shadow" } },
       legend: {
-        data: ["Alive", "Reversed", "Dead"],
+        data: ["有效", "反转", "失效"],
         textStyle: { color: theme.textColor, fontSize: 11 },
         right: 8,
         top: 4,
@@ -945,9 +944,9 @@ function ResultPanel({ result }: { result: AlphaBenchResult }) {
         axisLabel: { color: theme.textColor, fontSize: 10 },
       },
       series: [
-        { name: "Alive", type: "bar", stack: "n", data: aliveSeries, itemStyle: { color: theme.upColor } },
-        { name: "Reversed", type: "bar", stack: "n", data: reversedSeries, itemStyle: { color: theme.warningColor } },
-        { name: "Dead", type: "bar", stack: "n", data: deadSeries, itemStyle: { color: theme.downColor } },
+        { name: "有效", type: "bar", stack: "n", data: aliveSeries, itemStyle: { color: theme.upColor } },
+        { name: "反转", type: "bar", stack: "n", data: reversedSeries, itemStyle: { color: theme.warningColor } },
+        { name: "失效", type: "bar", stack: "n", data: deadSeries, itemStyle: { color: theme.downColor } },
       ],
     });
 
@@ -960,10 +959,10 @@ function ResultPanel({ result }: { result: AlphaBenchResult }) {
   }, [result, dark]);
 
   const totals = [
-    { label: "Alive", value: result.alive, icon: CheckCircle2, tone: "text-green-600 dark:text-green-400" },
-    { label: "Reversed", value: result.reversed, icon: AlertTriangle, tone: "text-amber-600 dark:text-amber-400" },
-    { label: "Dead", value: result.dead, icon: XCircle, tone: "text-red-600 dark:text-red-400" },
-    { label: "Skipped", value: result.skipped ?? 0, icon: Loader2, tone: "text-muted-foreground" },
+    { label: "有效", value: result.alive, icon: CheckCircle2, tone: "text-green-600 dark:text-green-400" },
+    { label: "反转", value: result.reversed, icon: AlertTriangle, tone: "text-amber-600 dark:text-amber-400" },
+    { label: "失效", value: result.dead, icon: XCircle, tone: "text-red-600 dark:text-red-400" },
+    { label: "跳过", value: result.skipped ?? 0, icon: Loader2, tone: "text-muted-foreground" },
   ];
 
   return (
@@ -1008,17 +1007,17 @@ function TopTable({ title, rows }: { title: string; rows: AlphaBenchTopRow[] }) 
       </div>
       {rows.length === 0 ? (
         <div className="px-4 py-6 text-xs text-muted-foreground text-center">
-          No rows.
+          暂无数据。
         </div>
       ) : (
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b">
-              <th className="text-left px-4 py-2 text-xs text-muted-foreground font-medium">ID</th>
-              <th className="text-right px-4 py-2 text-xs text-muted-foreground font-medium">Mean IC</th>
+              <th className="text-left px-4 py-2 text-xs text-muted-foreground font-medium">因子 ID</th>
+              <th className="text-right px-4 py-2 text-xs text-muted-foreground font-medium">平均 IC</th>
               <th className="text-right px-4 py-2 text-xs text-muted-foreground font-medium">IR</th>
-              <th className="text-left px-4 py-2 text-xs text-muted-foreground font-medium">Theme</th>
-              <th className="text-left px-4 py-2 text-xs text-muted-foreground font-medium">Category</th>
+              <th className="text-left px-4 py-2 text-xs text-muted-foreground font-medium">主题</th>
+              <th className="text-left px-4 py-2 text-xs text-muted-foreground font-medium">分类</th>
             </tr>
           </thead>
           <tbody>
@@ -1158,7 +1157,7 @@ function CompareView() {
         sourceRef.current = null;
         return;
       }
-      let msg = "Compare stream error";
+      let msg = "对比流处理失败";
       try {
         const data = JSON.parse((e as MessageEvent).data || "{}");
         if (typeof data.message === "string") msg = data.message;
@@ -1176,7 +1175,7 @@ function CompareView() {
     e.preventDefault();
     if (status === "submitting" || status === "streaming") return;
     if (ids.length < 2) {
-      setFormError("Enter at least 2 distinct alpha ids to compare.");
+      setFormError("请至少输入 2 个不同的因子 ID 再进行对比。");
       return;
     }
     setStatus("submitting");
@@ -1196,7 +1195,7 @@ function CompareView() {
       attachStream(res.job_id);
     } catch (err: unknown) {
       const msg =
-        err instanceof Error ? err.message : "Failed to start comparison";
+        err instanceof Error ? err.message : "启动对比失败";
       toast.error(msg);
       setStatus("error");
     }
@@ -1210,27 +1209,25 @@ function CompareView() {
         to="/alpha-zoo"
         className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1"
       >
-        <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" /> Back to Alpha Zoo
+        <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" /> 返回因子库
       </Link>
 
       <div className="space-y-1">
         <div className="flex items-center gap-2 text-xs text-muted-foreground uppercase tracking-wide">
-          <ArrowLeftRight className="h-3.5 w-3.5" aria-hidden="true" /> Head-to-head compare
+          <ArrowLeftRight className="h-3.5 w-3.5" aria-hidden="true" /> 因子对比
         </div>
         <h1 className="text-2xl md:text-3xl font-bold tracking-tight">
-          Compare alphas side by side
+          并排比较多个因子
         </h1>
         <p className="text-sm text-muted-foreground max-w-2xl">
-          Benches just the alphas you pick on a universe and period, then ranks
-          them by IC / IR with the gap to the leader — far faster than benching a
-          whole zoo when you only care about a shortlist.
+          仅对你选中的因子在指定股票池和区间上做评估，并按 IC / IR 及相对第一名的差距排序。若只关注少量候选因子，这比评估整个因子库更高效。
         </p>
       </div>
 
       <form onSubmit={startCompare} className="border rounded-xl p-4 bg-card space-y-3">
         <div>
           <label htmlFor="compare-ids" className="text-xs text-muted-foreground block mb-1">
-            Alpha ids{ids.length > 0 ? ` (${ids.length} selected)` : ""}
+            因子 ID{ids.length > 0 ? `（已选 ${ids.length} 个）` : ""}
           </label>
           <textarea
             id="compare-ids"
@@ -1238,18 +1235,17 @@ function CompareView() {
             onChange={(e) => setIdsText(e.target.value)}
             disabled={busy}
             rows={2}
-            placeholder="alpha101_1, alpha101_2, gtja191_5"
+            placeholder="例如：alpha101_1, alpha101_2, gtja191_5"
             className="w-full px-3 py-2 rounded-lg border bg-background text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary/30 disabled:opacity-50"
           />
           <p className="text-[11px] text-muted-foreground mt-1">
-            Separate ids with commas or spaces. Tip: tick alphas in the catalogue
-            and hit “Compare” to prefill this.
+            可用逗号或空格分隔多个 ID。也可以先在因子目录中勾选因子，再点击“对比”自动带入。
           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div>
-            <label htmlFor="compare-universe" className="text-xs text-muted-foreground block mb-1">Universe</label>
+            <label htmlFor="compare-universe" className="text-xs text-muted-foreground block mb-1">股票池</label>
             <select
               id="compare-universe"
               value={universe}
@@ -1265,7 +1261,7 @@ function CompareView() {
             </select>
           </div>
           <div>
-            <label htmlFor="compare-period" className="text-xs text-muted-foreground block mb-1">Period</label>
+            <label htmlFor="compare-period" className="text-xs text-muted-foreground block mb-1">区间</label>
             <input
               id="compare-period"
               value={period}
@@ -1301,11 +1297,11 @@ function CompareView() {
           >
             {busy ? (
               <>
-                <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" /> Running…
+                <Loader2 className="h-3.5 w-3.5 animate-spin" aria-hidden="true" /> 运行中…
               </>
             ) : (
               <>
-                <ArrowLeftRight className="h-3.5 w-3.5" aria-hidden="true" /> Compare
+                <ArrowLeftRight className="h-3.5 w-3.5" aria-hidden="true" /> 对比
               </>
             )}
           </button>
@@ -1336,33 +1332,33 @@ function CompareResultPanel({ result }: { result: AlphaCompareResult }) {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
         <span className="inline-flex items-center gap-1.5 font-medium text-emerald-600 dark:text-emerald-400">
-          <CheckCircle2 className="h-4 w-4" aria-hidden="true" /> Winner:{" "}
+          <CheckCircle2 className="h-4 w-4" aria-hidden="true" /> 优胜因子：
           <span className="font-mono">{result.winner}</span>
         </span>
         <span className="text-muted-foreground">
-          {result.n_compared} compared · ranked by {result.sort} · {result.universe} · {result.period}
+          共对比 {result.n_compared} 个 · 排序指标：{result.sort} · {result.universe} · {result.period}
         </span>
         {result.n_skipped > 0 && (
           <span className="inline-flex items-center gap-1 text-amber-600 dark:text-amber-400">
-            <AlertTriangle className="h-3.5 w-3.5" aria-hidden="true" /> {result.n_skipped} skipped
+            <AlertTriangle className="h-3.5 w-3.5" aria-hidden="true" /> 已跳过 {result.n_skipped} 个
           </span>
         )}
       </div>
 
       <div className="border rounded-xl overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm" aria-label="Alpha comparison ranking">
+          <table className="w-full text-sm" aria-label="因子对比排名">
             <thead>
               <tr className="border-b bg-muted/40 text-muted-foreground text-xs">
                 <th className="text-right px-3 py-2">#</th>
-                <th className="text-left px-3 py-2">Alpha</th>
-                <th className="text-left px-3 py-2 hidden sm:table-cell">Zoo</th>
-                <th className="text-right px-3 py-2">IC mean</th>
-                <th className="text-right px-3 py-2 hidden md:table-cell">IC std</th>
+                <th className="text-left px-3 py-2">因子</th>
+                <th className="text-left px-3 py-2 hidden sm:table-cell">因子库</th>
+                <th className="text-right px-3 py-2">IC 均值</th>
+                <th className="text-right px-3 py-2 hidden md:table-cell">IC 标准差</th>
                 <th className="text-right px-3 py-2">IR</th>
-                <th className="text-right px-3 py-2 hidden md:table-cell" title="Share of periods with positive IC">IC&gt;0</th>
-                <th className="text-right px-3 py-2 hidden lg:table-cell" title="IC sample count">n</th>
-                <th className="text-right px-3 py-2" title={`Gap to the leader on ${result.sort}`}>Δ {result.sort}</th>
+                <th className="text-right px-3 py-2 hidden md:table-cell" title="IC 为正的区间占比">IC&gt;0</th>
+                <th className="text-right px-3 py-2 hidden lg:table-cell" title="IC 样本数量">样本数</th>
+                <th className="text-right px-3 py-2" title={`相对领先因子的 ${result.sort} 差距`}>差值 {result.sort}</th>
               </tr>
             </thead>
             <tbody>
@@ -1401,7 +1397,7 @@ function CompareResultPanel({ result }: { result: AlphaCompareResult }) {
 
       {result.skipped.length > 0 && (
         <p className="text-xs text-muted-foreground">
-          <span className="font-medium">Skipped:</span>{" "}
+          <span className="font-medium">已跳过：</span>{" "}
           {result.skipped.map((s) => `${s.id} (${s.reason})`).join("; ")}
         </p>
       )}

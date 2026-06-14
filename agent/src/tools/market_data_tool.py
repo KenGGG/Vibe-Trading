@@ -15,7 +15,7 @@ class MarketDataTool(BaseTool):
     description = (
         "Fetch normalized OHLCV market data through the repository loader layer. "
         "Use this for stock, ETF, index, or crypto price bars before writing raw "
-        "yfinance/OKX/Tushare scripts."
+        "provider scripts. A-shares auto-route through the local a_stock_data chain."
     )
     parameters = {
         "type": "object",
@@ -35,7 +35,7 @@ class MarketDataTool(BaseTool):
             },
             "source": {
                 "type": "string",
-                "description": "Data source: auto, yfinance, okx, tushare, baostock, tencent, akshare, or ccxt.",
+                "description": "Data source: auto, a_stock_data, yfinance, okx, tushare, baostock, tencent, akshare, or ccxt.",
                 "default": "auto",
             },
             "interval": {

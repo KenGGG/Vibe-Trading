@@ -255,7 +255,7 @@ export function CandlestickChart({ data, markers, indicators, height = 500 }: Pr
   }, [data, markers, baseData, indicatorCache, extraIndicators, sub, range, overlays, dark]);
 
   if (data.length === 0) {
-    return <div className="text-muted-foreground text-sm p-4">No price data</div>;
+    return <div className="text-muted-foreground text-sm p-4">暂无价格数据</div>;
   }
 
   return (
@@ -276,13 +276,13 @@ export function CandlestickChart({ data, markers, indicators, height = 500 }: Pr
             onClick={() => setShowMenu(!showMenu)}
             className="flex items-center gap-1 px-2 py-0.5 rounded text-[10px] text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
           >
-            Indicators ({overlays.size}) <ChevronDown className="h-3 w-3" />
+            指标（{overlays.size}） <ChevronDown className="h-3 w-3" />
           </button>
           {showMenu && (
             <div className="absolute top-full left-0 mt-1 z-50 bg-card border rounded-lg shadow-lg p-2 min-w-[160px]" onMouseLeave={() => setShowMenu(false)}>
               {["MA", "Channel"].map(group => (
                 <div key={group}>
-                  <p className="text-[9px] text-muted-foreground/50 uppercase tracking-wider px-1 pt-1">{group}</p>
+                  <p className="text-[9px] text-muted-foreground/50 uppercase tracking-wider px-1 pt-1">{group === "MA" ? "均线" : "通道"}</p>
                   {OVERLAY_OPTIONS.filter(o => o.group === group).map(o => (
                     <label key={o.id} className="flex items-center gap-2 px-1 py-0.5 rounded hover:bg-muted/30 cursor-pointer">
                       <input type="checkbox" checked={overlays.has(o.id)} onChange={() => toggleOverlay(o.id)} className="h-3 w-3 rounded accent-primary" />

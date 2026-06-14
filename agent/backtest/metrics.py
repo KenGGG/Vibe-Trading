@@ -19,15 +19,15 @@ from backtest.models import TradeRecord
 # sessions are marginally longer (~330 min) — an approximation in line with the
 # rest of this annualisation table; the key fix is that intraday mootdx/futu no
 # longer fall back to the bars_per_day=1 default, which mis-annualised vol/Sharpe.
-_TRADING_DAYS = {"tushare": 252, "yfinance": 252, "okx": 365, "akshare": 252, "ccxt": 365, "mootdx": 252, "futu": 252}
+_TRADING_DAYS = {"a_stock_data": 252, "tushare": 252, "yfinance": 252, "okx": 365, "akshare": 252, "ccxt": 365, "mootdx": 252, "futu": 252}
 _BARS_PER_DAY = {
-    "1m":  {"tushare": 240, "okx": 1440, "yfinance": 390, "akshare": 240, "ccxt": 1440, "mootdx": 240, "futu": 240},
-    "5m":  {"tushare": 48,  "okx": 288,  "yfinance": 78,  "akshare": 48,  "ccxt": 288,  "mootdx": 48,  "futu": 48},
-    "15m": {"tushare": 16,  "okx": 96,   "yfinance": 26,  "akshare": 16,  "ccxt": 96,   "mootdx": 16,  "futu": 16},
-    "30m": {"tushare": 8,   "okx": 48,   "yfinance": 13,  "akshare": 8,   "ccxt": 48,   "mootdx": 8,   "futu": 8},
-    "1H":  {"tushare": 4,   "okx": 24,   "yfinance": 7,   "akshare": 4,   "ccxt": 24,   "mootdx": 4,   "futu": 4},
-    "4H":  {"tushare": 1,   "okx": 6,    "yfinance": 2,   "akshare": 1,   "ccxt": 6,    "mootdx": 1,   "futu": 1},
-    "1D":  {"tushare": 1,   "okx": 1,    "yfinance": 1,   "akshare": 1,   "ccxt": 1,    "mootdx": 1,   "futu": 1},
+    "1m":  {"a_stock_data": 240, "tushare": 240, "okx": 1440, "yfinance": 390, "akshare": 240, "ccxt": 1440, "mootdx": 240, "futu": 240},
+    "5m":  {"a_stock_data": 48,  "tushare": 48,  "okx": 288,  "yfinance": 78,  "akshare": 48,  "ccxt": 288,  "mootdx": 48,  "futu": 48},
+    "15m": {"a_stock_data": 16,  "tushare": 16,  "okx": 96,   "yfinance": 26,  "akshare": 16,  "ccxt": 96,   "mootdx": 16,  "futu": 16},
+    "30m": {"a_stock_data": 8,   "tushare": 8,   "okx": 48,   "yfinance": 13,  "akshare": 8,   "ccxt": 48,   "mootdx": 8,   "futu": 8},
+    "1H":  {"a_stock_data": 4,   "tushare": 4,   "okx": 24,   "yfinance": 7,   "akshare": 4,   "ccxt": 24,   "mootdx": 4,   "futu": 4},
+    "4H":  {"a_stock_data": 1,   "tushare": 1,   "okx": 6,    "yfinance": 2,   "akshare": 1,   "ccxt": 6,    "mootdx": 1,   "futu": 1},
+    "1D":  {"a_stock_data": 1,   "tushare": 1,   "okx": 1,    "yfinance": 1,   "akshare": 1,   "ccxt": 1,    "mootdx": 1,   "futu": 1},
 }
 
 

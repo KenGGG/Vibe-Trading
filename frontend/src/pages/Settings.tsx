@@ -58,13 +58,13 @@ export function Settings() {
         setSettingsLoadError(null);
       })
       .catch((error) => {
-        const message = error instanceof Error ? error.message : "Unknown error";
+        const message = error instanceof Error ? error.message : "未知错误";
         setSettingsLoadError(message);
         if (isAuthRequiredError(error)) {
           toast.error(message);
         } else {
-          toast.error(`Failed to load LLM settings: ${message}`);
-          toast.error(`Failed to load data source settings: ${message}`);
+          toast.error(`加载 LLM 设置失败：${message}`);
+          toast.error(`加载数据源设置失败：${message}`);
         }
       })
       .finally(() => {
@@ -104,7 +104,7 @@ export function Settings() {
   const submitLocalApiKey = (event: FormEvent) => {
     event.preventDefault();
     setApiAuthKey(localApiKey);
-    toast.success("Local API key saved");
+    toast.success("本地 API 密钥已保存");
     window.location.reload();
   };
 
@@ -122,9 +122,9 @@ export function Settings() {
       setForm(toForm(updated));
       setApiKey("");
       setClearApiKey(false);
-      toast.success("LLM settings saved");
+      toast.success("LLM 设置已保存");
     } catch (error) {
-      toast.error(`Failed to save LLM settings: ${error instanceof Error ? error.message : "Unknown error"}`);
+      toast.error(`保存 LLM 设置失败：${error instanceof Error ? error.message : "未知错误"}`);
     } finally {
       setSaving(false);
     }
@@ -141,9 +141,9 @@ export function Settings() {
       setDataSettings(updated);
       setTushareToken("");
       setClearTushareToken(false);
-      toast.success("Data source settings saved");
+      toast.success("数据源设置已保存");
     } catch (error) {
-      toast.error(`Failed to save data source settings: ${error instanceof Error ? error.message : "Unknown error"}`);
+      toast.error(`保存数据源设置失败：${error instanceof Error ? error.message : "未知错误"}`);
     } finally {
       setDataSaving(false);
     }
@@ -154,19 +154,19 @@ export function Settings() {
       <div className="mb-4 space-y-1">
         <div className="flex items-center gap-2">
           <KeyRound className="h-4 w-4 text-primary" />
-          <h2 className="text-base font-semibold">{"Local API access"}</h2>
+          <h2 className="text-base font-semibold">{"本地 API 访问"}</h2>
         </div>
-        <p className="text-sm text-muted-foreground">{"For remote or private Web UI deployments, enter the server API key once in this browser. Localhost use can stay blank."}</p>
+        <p className="text-sm text-muted-foreground">{"如果是远程或私有 Web 界面部署，请在此浏览器中录入一次服务器 API 密钥。本地 localhost 使用可留空。"}</p>
       </div>
       <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto]">
         <label className="grid gap-2">
-          <span className={labelClass}>{"Server API key"}</span>
+          <span className={labelClass}>{"服务器 API 密钥"}</span>
           <input
             type="password"
             value={localApiKey}
             onChange={(event) => setLocalApiKeyState(event.target.value)}
             className={fieldClass}
-            placeholder={"Stored only in this browser. Leave blank to clear it."}
+            placeholder={"仅保存在当前浏览器中。留空表示清除。"}
             autoComplete="current-password"
           />
         </label>
@@ -178,7 +178,7 @@ export function Settings() {
           {i18n.t("settings.save")}
         </button>
       </div>
-      <p className="mt-2 text-xs text-muted-foreground">{"Stored only in this browser. Leave blank to clear it."}</p>
+      <p className="mt-2 text-xs text-muted-foreground">{"仅保存在当前浏览器中。留空表示清除。"}</p>
     </form>
   );
 
@@ -186,20 +186,20 @@ export function Settings() {
     return (
       <div className="mx-auto max-w-5xl space-y-6 p-6">
         <div className="space-y-2">
-          <h1 className="text-2xl font-semibold tracking-tight">{"Settings"}</h1>
-          <p className="max-w-3xl text-sm text-muted-foreground">{"Configure model credentials and market data source tokens for this local project."}</p>
+          <h1 className="text-2xl font-semibold tracking-tight">{"设置"}</h1>
+          <p className="max-w-3xl text-sm text-muted-foreground">{"为当前本地项目配置模型凭证和市场数据源令牌。"}</p>
         </div>
         {localApiAccessSection}
         <div className="flex min-h-32 items-center justify-center rounded-lg border bg-card p-5 text-sm text-muted-foreground">
           {settingsLoadError ? (
             <div className="text-center">
-              <div className="font-medium text-foreground">{"Settings are unavailable"}</div>
+              <div className="font-medium text-foreground">{"设置暂不可用"}</div>
               <div className="mt-1">{settingsLoadError}</div>
             </div>
           ) : (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              {"Loading..."}
+              {"加载中..."}
             </>
           )}
         </div>
@@ -208,36 +208,36 @@ export function Settings() {
   }
 
   const keyStatus = settings.api_key_configured
-    ? "Configured"
+    ? "已配置"
     : settings.api_key_required
-      ? "Leave blank to keep the current key"
+      ? "留空则保留当前密钥"
       : selectedProvider?.auth_type === "oauth" && selectedProvider.login_command
-        ? `This provider uses OAuth. Run: ${selectedProvider.login_command}`
-        : "This provider does not require an API key.";
+        ? `该提供方使用 OAuth，请运行：${selectedProvider.login_command}`
+        : "该提供方不需要 API 密钥。";
   const apiKeyDisabled = !selectedProvider?.api_key_required || clearApiKey;
   const tushareStatus = dataSettings.tushare_token_configured
-    ? "Configured"
-    : "Leave blank to keep the current token";
+    ? "已配置"
+    : "留空则保留当前令牌";
 
   return (
     <div className="mx-auto max-w-5xl space-y-6 p-6">
       <div className="space-y-2">
-        <h1 className="text-2xl font-semibold tracking-tight">{"Settings"}</h1>
-        <p className="max-w-3xl text-sm text-muted-foreground">{"Configure model credentials and market data source tokens for this local project."}</p>
+        <h1 className="text-2xl font-semibold tracking-tight">{"设置"}</h1>
+        <p className="max-w-3xl text-sm text-muted-foreground">{"为当前本地项目配置模型凭证和市场数据源令牌。"}</p>
       </div>
 
       {localApiAccessSection}
 
       <div className="space-y-2">
-        <h2 className="text-lg font-semibold tracking-tight">{"LLM Settings"}</h2>
-        <p className="max-w-3xl text-sm text-muted-foreground">{"Choose the model used by the agent and save it to the project-local agent/.env file."}</p>
+        <h2 className="text-lg font-semibold tracking-tight">{"LLM 设置"}</h2>
+        <p className="max-w-3xl text-sm text-muted-foreground">{"选择智能体使用的模型，并保存到项目本地的 agent/.env 文件中。"}</p>
       </div>
 
       <form onSubmit={submit} className="grid gap-6 lg:grid-cols-[minmax(0,1.4fr)_minmax(320px,0.8fr)]">
         <section className="rounded-lg border bg-card p-5 shadow-sm">
           <div className="mb-5 flex items-center gap-2">
             <Server className="h-4 w-4 text-primary" />
-            <h2 className="text-base font-semibold">{"Connection"}</h2>
+            <h2 className="text-base font-semibold">{"连接"}</h2>
           </div>
 
           <div className="grid gap-4">
@@ -252,11 +252,11 @@ export function Settings() {
                   <option key={provider.name} value={provider.name}>{provider.label}</option>
                 ))}
               </select>
-              <span className={hintClass}>{"Changing providers updates the recommended model and endpoint."}</span>
+              <span className={hintClass}>{"切换提供方会同步更新推荐模型和接口地址。"}</span>
             </label>
 
             <label className="grid gap-2">
-              <span className={labelClass}>{"Model"}</span>
+              <span className={labelClass}>{"模型"}</span>
               <div className="flex gap-2">
                 <input
                   value={form.model_name}
@@ -268,13 +268,13 @@ export function Settings() {
                   type="button"
                   onClick={() => applyProviderDefaults()}
                   className="inline-flex shrink-0 items-center gap-2 rounded-md border px-3 py-2 text-sm text-muted-foreground transition hover:bg-muted hover:text-foreground"
-                  title={"Use provider defaults"}
+                  title={"恢复为提供方默认值"}
                 >
                   <RotateCcw className="h-4 w-4" />
-                  <span className="hidden sm:inline">{"Use provider defaults"}</span>
+                  <span className="hidden sm:inline">{"恢复默认值"}</span>
                 </button>
               </div>
-              <span className={hintClass}>{"Use the exact model id required by your provider."}</span>
+              <span className={hintClass}>{"请填写提供方要求的准确模型 ID。"}</span>
             </label>
 
             <label className="grid gap-2">
@@ -290,7 +290,7 @@ export function Settings() {
 
             <label className="grid gap-2">
               <span className={labelClass}>
-                {selectedProvider?.auth_type === "oauth" ? "OAuth" : "API key"}
+                {selectedProvider?.auth_type === "oauth" ? "OAuth" : "API 密钥"}
               </span>
               <div className="relative">
                 <KeyRound className="pointer-events-none absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -317,7 +317,7 @@ export function Settings() {
                       }}
                       className="h-3.5 w-3.5 accent-primary"
                     />
-                    {"Clear saved API key"}
+                    {"清除已保存的 API 密钥"}
                   </label>
                 ) : null}
               </div>
@@ -328,7 +328,7 @@ export function Settings() {
         <section className="rounded-lg border bg-card p-5 shadow-sm">
           <div className="mb-5 flex items-center gap-2">
             <SlidersHorizontal className="h-4 w-4 text-primary" />
-            <h2 className="text-base font-semibold">{"Generation"}</h2>
+            <h2 className="text-base font-semibold">{"生成参数"}</h2>
           </div>
 
           <div className="grid gap-4">
@@ -359,7 +359,7 @@ export function Settings() {
             </label>
 
             <label className="grid gap-2">
-              <span className={labelClass}>{"Max retries"}</span>
+              <span className={labelClass}>{"最大重试次数"}</span>
               <input
                 type="number"
                 min={0}
@@ -378,13 +378,13 @@ export function Settings() {
                 onChange={(event) => setForm({ ...form, reasoning_effort: event.target.value })}
                 className={fieldClass}
               >
-                <option value="">{"Off"}</option>
-                <option value="low">low</option>
-                <option value="medium">medium</option>
-                <option value="high">high</option>
-                <option value="max">max</option>
+                <option value="">{"关闭"}</option>
+                <option value="low">低</option>
+                <option value="medium">中</option>
+                <option value="high">高</option>
+                <option value="max">最高</option>
               </select>
-              <span className={hintClass}>{"How hard the model thinks before answering. Higher is more thorough but slower; leave Off for fastest replies."}</span>
+              <span className={hintClass}>{"控制模型在回答前的推理强度。等级越高越充分，但响应会更慢；如需最快回复可选择关闭。"}</span>
             </label>
 
             <div className="rounded-md border bg-muted/30 px-3 py-2 text-xs text-muted-foreground">
@@ -408,15 +408,15 @@ export function Settings() {
         <div className="mb-5 space-y-1">
           <div className="flex items-center gap-2">
             <Database className="h-4 w-4 text-primary" />
-            <h2 className="text-base font-semibold">{"Data Source Settings"}</h2>
+            <h2 className="text-base font-semibold">{"数据源设置"}</h2>
           </div>
-          <p className="text-sm text-muted-foreground">{"Configure optional market data credentials used by backtests and research agents."}</p>
+          <p className="text-sm text-muted-foreground">{"配置回测与研究智能体可选使用的市场数据凭证。"}</p>
         </div>
 
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1.1fr)_minmax(280px,0.9fr)]">
           <div className="grid gap-4">
             <label className="grid gap-2">
-              <span className={labelClass}>{"Tushare token"}</span>
+              <span className={labelClass}>{"Tushare 令牌"}</span>
               <div className="relative">
                 <KeyRound className="pointer-events-none absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
                 <input
@@ -430,7 +430,7 @@ export function Settings() {
                 />
               </div>
               <div className="flex items-center justify-between gap-3">
-                <span className={hintClass}>{"Used for China A-share, futures, fund, and macro data. If unset, the project falls back to AKShare where available."}</span>
+                <span className={hintClass}>{"用于仅由 Tushare 提供的 A 股补充字段，例如 daily_basic 与财务报表字段。即使这里留空，常规 A 股 K 线仍会优先使用本地 a_stock_data 链路（mootdx / 腾讯 / 百度）。"}</span>
                 <label className="flex shrink-0 items-center gap-2 text-xs text-muted-foreground">
                   <input
                     type="checkbox"
@@ -441,7 +441,7 @@ export function Settings() {
                     }}
                     className="h-3.5 w-3.5 accent-primary"
                   />
-                  {"Clear saved Tushare token"}
+                  {"清除已保存的 Tushare 令牌"}
                 </label>
               </div>
             </label>
@@ -457,7 +457,7 @@ export function Settings() {
               className="inline-flex items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70"
             >
               {dataSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-              {dataSaving ? i18n.t("settings.saving") : "Save data source settings"}
+              {dataSaving ? i18n.t("settings.saving") : "保存数据源设置"}
             </button>
           </div>
 
@@ -465,15 +465,15 @@ export function Settings() {
             <div className="mb-3 flex items-center justify-between gap-3">
               <span className="text-sm font-medium">{"BaoStock"}</span>
               <span className={`rounded-full px-2 py-0.5 text-xs ${dataSettings.baostock_supported ? "bg-success/10 text-success" : "bg-warning/10 text-warning"}`}>
-                {dataSettings.baostock_supported ? "Loader available" : "No project loader"}
+                {dataSettings.baostock_supported ? "已提供加载器" : "项目中未提供加载器"}
               </span>
             </div>
             <div className="space-y-2 text-sm text-muted-foreground">
               <p>{dataSettings.baostock_message}</p>
               <p>
                 {dataSettings.baostock_installed
-                  ? "Python package installed"
-                  : "Python package not installed"}
+                  ? "Python 包已安装"
+                  : "Python 包未安装"}
               </p>
             </div>
           </div>

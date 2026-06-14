@@ -28,6 +28,7 @@ from pydantic import BaseModel, Field
 from fastapi.middleware.cors import CORSMiddleware
 from rich.console import Console
 
+from src.a_share_data_sources import get_a_share_data_overview, update_local_dolt_data
 from src.goal.context import default_goal_criteria
 from src.ui_services import build_run_analysis, load_run_context
 
@@ -205,6 +206,103 @@ class UpdateDataSourceSettingsRequest(BaseModel):
 
     tushare_token: Optional[str] = None
     clear_tushare_token: bool = False
+
+
+class AShareDatabaseTableStatus(BaseModel):
+    """Per-table status for the local A-share Dolt repository."""
+
+    name: str
+    latest_trade_date: Optional[str] = None
+    row_count: int = 0
+
+
+class AShareLocalDatabaseStatus(BaseModel):
+    """Local Dolt-backed A-share daily database status."""
+
+    available: bool
+    path: str
+    command_available: bool
+    repo_ready: bool
+    branch: Optional[str] = None
+    clean: Optional[bool] = None
+    message: str = ""
+    preferred_table: Optional[str] = None
+    latest_trade_date: Optional[str] = None
+    tables: List[AShareDatabaseTableStatus] = Field(default_factory=list)
+
+
+class AShareNetworkComponentStatus(BaseModel):
+    """One component inside the a-stock-data priority chain."""
+
+    name: str
+    available: bool
+    detail: str
+    latest_trade_date: Optional[str] = None
+
+
+class AShareLayerProviderStatus(BaseModel):
+    """Provider status inside one a-stock-data architecture layer."""
+
+    name: str
+    role: str
+    integrated: bool
+    callable: bool
+    verified: bool
+    detail: str
+    latest_trade_date: Optional[str] = None
+
+
+class AShareLayerStatus(BaseModel):
+    """One layer in the a-stock-data seven-layer architecture."""
+
+    key: str
+    name: str
+    description: str
+    capabilities: List[str] = Field(default_factory=list)
+    integrated: bool
+    callable: bool
+    verified: bool
+    providers: List[AShareLayerProviderStatus] = Field(default_factory=list)
+    notes: str
+
+
+class AShareIntegrationSummary(BaseModel):
+    """Roll-up status for the seven-layer a-stock-data integration."""
+
+    total_layers: int
+    integrated_layers: int
+    callable_layers: int
+    verified_layers: int
+    message: str
+
+
+class AShareNetworkSourceStatus(BaseModel):
+    """Status for the network-backed a-stock-data chain."""
+
+    available: bool
+    latest_trade_date: Optional[str] = None
+    components: List[AShareNetworkComponentStatus] = Field(default_factory=list)
+    layers: List[AShareLayerStatus] = Field(default_factory=list)
+    integration_summary: AShareIntegrationSummary
+    preferred_usage: Dict[str, str] = Field(default_factory=dict)
+
+
+class AShareDataStatusResponse(BaseModel):
+    """Merged A-share data-source status for the Web UI."""
+
+    as_of: str
+    local_database: AShareLocalDatabaseStatus
+    a_stock_data: AShareNetworkSourceStatus
+    priority: Dict[str, str]
+
+
+class AShareDataUpdateResponse(BaseModel):
+    """Manual local-database refresh result plus refreshed status."""
+
+    success: bool
+    command: str
+    output: str
+    status: AShareDataStatusResponse
 
 
 # ---- V4 Session Models ----
@@ -1447,6 +1545,33 @@ async def update_data_source_settings(payload: UpdateDataSourceSettingsRequest):
             os.environ.pop("TUSHARE_TOKEN", None)
 
     return _build_data_source_settings_response(_read_env_values(ENV_PATH))
+
+
+@app.get(
+    "/settings/a-share-data",
+    response_model=AShareDataStatusResponse,
+    dependencies=[Depends(require_local_or_auth)],
+)
+async def get_a_share_data_status():
+    """Return local-Dolt and a-stock-data status for the Web UI."""
+    return AShareDataStatusResponse(**get_a_share_data_overview())
+
+
+@app.post(
+    "/settings/a-share-data/update",
+    response_model=AShareDataUpdateResponse,
+    dependencies=[Depends(require_local_or_auth)],
+)
+async def update_a_share_data():
+    """Manually run ``dolt pull`` for the local A-share daily database."""
+    result = update_local_dolt_data()
+    overview = AShareDataStatusResponse(**get_a_share_data_overview())
+    return AShareDataUpdateResponse(
+        success=result.success,
+        command=f"cd {overview.local_database.path} && dolt pull",
+        output=result.output,
+        status=overview,
+    )
 
 
 @app.get("/health", response_model=HealthResponse)

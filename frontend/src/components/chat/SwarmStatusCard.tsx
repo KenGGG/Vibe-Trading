@@ -115,7 +115,7 @@ export const SwarmStatusCard = memo(function SwarmStatusCard({ status }: Props) 
             total={Math.max(total, 1)}
             height="xs"
             showCount
-            ariaLabel="Swarm agent progress"
+            ariaLabel="智能体协作进度"
           />
           <div className="text-right font-mono text-[11px] text-muted-foreground">
             {t('swarmStatus.layer', { current: layerCurrent, total: layerTotal })}

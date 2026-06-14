@@ -191,7 +191,7 @@ def _check_tushare() -> CheckResult:
             name="Tushare",
             status="not_configured",
             message="TUSHARE_TOKEN not set (optional)",
-            impact="A-share data unavailable",
+            impact="A-share daily_basic / statement enrichment unavailable",
         )
 
     try:
@@ -201,7 +201,7 @@ def _check_tushare() -> CheckResult:
             name="Tushare",
             status="skipped",
             message="package not installed",
-            impact="A-share data unavailable",
+            impact="A-share daily_basic / statement enrichment unavailable",
         )
 
     return CheckResult(name="Tushare", status="ready", message="token configured", impact="")

@@ -120,6 +120,9 @@ class TestFallbackChains:
         expected = {"a_share", "us_equity", "hk_equity", "crypto", "futures", "fund", "macro", "forex"}
         assert expected == set(FALLBACK_CHAINS.keys())
 
+    def test_a_share_chain_prefers_a_stock_data(self) -> None:
+        assert FALLBACK_CHAINS["a_share"][0] == "a_stock_data"
+
     def test_chains_are_non_empty(self) -> None:
         for market, chain in FALLBACK_CHAINS.items():
             assert len(chain) > 0, f"Fallback chain for {market} is empty"

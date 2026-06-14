@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { Link, Outlet, useLocation, useSearchParams } from "react-router-dom";
-import { Activity, BarChart3, Bot, Languages, Moon, Sun, Plus, Trash2, Pencil, MessageSquare, ChevronsLeft, ChevronsRight, Settings, Layers, Loader2 } from "lucide-react";
+import { Activity, BarChart3, Bot, Languages, Moon, Sun, Plus, Trash2, Pencil, MessageSquare, ChevronsLeft, ChevronsRight, Settings, Layers, Loader2, Database } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useDarkMode } from "@/hooks/useDarkMode";
 import { api, type SessionItem } from "@/lib/api";
@@ -20,6 +20,7 @@ export function Layout() {
     { to: "/runtime", icon: Activity, label: t('layout.runtime') },
     { to: "/alpha-zoo", icon: Layers, label: t('layout.alphaZoo') },
     { to: "/settings", icon: Settings, label: t('layout.settings') },
+    { to: "/a-share-data", icon: Database, label: t('layout.aShareData') },
     { to: "/correlation", icon: BarChart3, label: t('layout.correlation') },
   ];
   const { pathname } = useLocation();
@@ -82,7 +83,7 @@ export function Layout() {
         <div className={cn("border-b", collapsed ? "p-2 flex justify-center" : "p-4")}>
           <Link to="/" className={cn("flex items-center font-bold text-base tracking-tight", collapsed ? "justify-center" : "gap-2")}>
             <BarChart3 className="h-5 w-5 text-primary shrink-0" />
-            {!collapsed && "Vibe-Trading"}
+            {!collapsed && "Vibe 交易"}
           </Link>
         </div>
 
@@ -116,7 +117,7 @@ export function Layout() {
             <div className="flex items-center justify-between px-4 py-2">
               <span className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
                 <MessageSquare className="h-3.5 w-3.5" />
-                Sessions
+                {t('layout.sessions')}
               </span>
               <Link
                 to="/agent"
@@ -228,7 +229,7 @@ export function Layout() {
                   className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {dark ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
-                  {dark ? "Light" : "Dark"}
+                  {dark ? "浅色" : "深色"}
                 </button>
                 <div className="flex items-center gap-1">
                   <button
@@ -246,7 +247,7 @@ export function Layout() {
                   className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
                 >
                   <Languages className="h-3.5 w-3.5" />
-                  {i18nHook.language === "zh-CN" ? "English" : "中文"}
+                  {"简体中文"}
                 </button>
                 <p className="text-xs text-muted-foreground/60">{APP_VERSION}</p>
               </div>

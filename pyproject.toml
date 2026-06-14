@@ -42,6 +42,7 @@ dependencies = [
     "smartmoneyconcepts>=0.0.1",
     "pyharmonics>=1.5.0",
     "tushare>=1.2.89",
+    "mootdx>=0.11.0",
     "requests>=2.31.0",
     "yfinance>=0.2.30",
     "akshare>=1.12.0",
@@ -99,10 +100,11 @@ deepseek = [
     "langchain-deepseek>=1.0.0,<2",
 ]
 ashare = [
-    # Free, no-auth A-share source over BaoStock's TCP protocol; bypasses the
-    # HTTP CDN IP blocks that affect eastmoney-backed sources. The Tencent
-    # A-share loader needs no extra dependency (stdlib HTTP only).
+    # Free, no-auth A-share sources. ``mootdx`` is the preferred TCP route for
+    # the local a_stock_data chain; BaoStock remains available as a secondary
+    # compatibility path.
     "baostock>=0.8.8",
+    "mootdx>=0.11.0",
 ]
 dev = [
     "pytest>=7.0",

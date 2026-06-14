@@ -13,6 +13,9 @@ const Compare = lazy(() =>
 const Settings = lazy(() =>
   import("@/pages/Settings").then((m) => ({ default: m.Settings })),
 );
+const AShareData = lazy(() =>
+  import("@/pages/AShareData").then((m) => ({ default: m.AShareData })),
+);
 const Runtime = lazy(() =>
   import("@/pages/Runtime").then((m) => ({ default: m.Runtime })),
 );
@@ -26,7 +29,7 @@ const AlphaZoo = lazy(() =>
 function PageLoader() {
   return (
     <div className="flex h-[60vh] items-center justify-center text-muted-foreground">
-      Loading…
+      页面加载中…
     </div>
   );
 }
@@ -47,6 +50,7 @@ export const router = createBrowserRouter([
       { path: "/agent", element: wrap(Agent) },
       { path: "/runtime", element: wrap(Runtime) },
       { path: "/settings", element: wrap(Settings) },
+      { path: "/a-share-data", element: wrap(AShareData) },
       { path: "/runs/:runId", element: wrap(RunDetail) },
       { path: "/compare", element: wrap(Compare) },
       { path: "/correlation", element: wrap(Correlation) },

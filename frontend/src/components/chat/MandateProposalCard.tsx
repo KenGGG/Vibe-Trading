@@ -28,10 +28,10 @@ function formatUsd(value: number): string {
 
 function formatLeverage(leverage: MandateProfile["leverage"]): string {
   if (typeof leverage === "number") {
-    return leverage <= 1 ? "no leverage" : `${leverage}× leverage`;
+    return leverage <= 1 ? "无杠杆" : `${leverage}× 杠杆`;
   }
   const lowered = leverage.toLowerCase();
-  return lowered === "none" || lowered === "" ? "no leverage" : leverage;
+  return lowered === "none" || lowered === "" ? "无杠杆" : leverage;
 }
 
 function formatUniverse(universe: MandateProfile["universe"]): string {
@@ -90,10 +90,10 @@ function ProfileTile({
           onClick={onAdjustToggle}
           disabled={disabled}
           className="inline-flex items-center gap-1 rounded-lg border px-2 py-0.5 text-[11px] font-medium text-muted-foreground transition-colors hover:text-foreground disabled:opacity-40"
-          title="Adjust this mandate"
+          title="调整该委托方案"
         >
           <SlidersHorizontal className="h-3 w-3" />
-          Adjust
+          调整
         </button>
       </div>
 
@@ -108,7 +108,7 @@ function ProfileTile({
         </div>
         <div>
           <dt className="text-muted-foreground">{i18n.t("mandate.dailyCap")}</dt>
-          <dd className="font-mono font-medium text-foreground">{profile.daily_trade_cap} trades/day</dd>
+          <dd className="font-mono font-medium text-foreground">{profile.daily_trade_cap} 笔/日</dd>
         </div>
         <div>
           <dt className="text-muted-foreground">{i18n.t("mandate.leverage")}</dt>
@@ -139,7 +139,7 @@ function ProfileTile({
                 onAdjustCancel();
               }
             }}
-            placeholder="e.g. keep this but raise the daily cap to 10"
+            placeholder="例如：保留这个方案，但把每日交易上限提高到 10 笔"
             className="w-full rounded-lg border bg-background px-3 py-1.5 text-xs text-foreground outline-none focus:ring-2 focus:ring-primary/30"
           />
           <div className="flex justify-end gap-2">
@@ -149,7 +149,7 @@ function ProfileTile({
               className="inline-flex items-center gap-1 rounded-lg border px-2 py-1 text-[11px] font-medium text-muted-foreground transition-colors hover:text-foreground"
             >
               <X className="h-3 w-3" />
-              Cancel
+              取消
             </button>
             <button
               type="button"
@@ -158,7 +158,7 @@ function ProfileTile({
               className="inline-flex items-center gap-1 rounded-lg bg-primary px-2 py-1 text-[11px] font-medium text-primary-foreground transition-opacity disabled:opacity-40"
             >
               <Check className="h-3 w-3" />
-              Send adjustment
+              发送调整要求
             </button>
           </div>
         </div>
@@ -170,7 +170,7 @@ function ProfileTile({
           className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-40"
         >
           {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <ShieldCheck className="h-3.5 w-3.5" />}
-          {busy ? "Committing…" : `Commit “${profile.label}”`}
+          {busy ? "提交中…" : `确认“${profile.label}”`}
         </button>
       )}
     </div>
@@ -194,7 +194,7 @@ export const MandateProposalCard = memo(function MandateProposalCard({ proposal,
       if (busyOrdinal != null) return;
       const broker = proposal.account?.broker?.trim().toLowerCase();
       if (!broker) {
-        toast.error("Cannot commit mandate: connector broker is missing. Ask the agent to regenerate the proposal.");
+        toast.error("无法确认委托方案：缺少连接器券商信息。请让智能体重新生成方案。");
         return;
       }
       setBusyOrdinal(ordinal);
@@ -211,7 +211,7 @@ export const MandateProposalCard = memo(function MandateProposalCard({ proposal,
         // SSE event arrives; no optimistic state-write here.
       } catch (error) {
         setBusyOrdinal(null);
-        toast.error(error instanceof Error ? error.message : "Failed to commit mandate.");
+        toast.error(error instanceof Error ? error.message : "确认委托方案失败。");
       }
     },
     [busyOrdinal, proposal.account?.broker, proposal.proposal_id, proposal.session_id],
@@ -230,15 +230,15 @@ export const MandateProposalCard = memo(function MandateProposalCard({ proposal,
           <span className="inline-flex max-w-full flex-wrap items-center gap-1.5 rounded-lg bg-emerald-500/10 px-2.5 py-1 text-xs font-medium text-emerald-600 dark:text-emerald-400">
             <ShieldCheck className="h-3 w-3 shrink-0" />
             <span className="shrink-0">
-              Mandate {committed.selected_ordinal != null ? `#${committed.selected_ordinal} ` : ""}active
+              委托方案{committed.selected_ordinal != null ? ` #${committed.selected_ordinal}` : ""}已生效
             </span>
             {maxOrder != null && (
-              <span className="shrink-0 font-mono text-[11px]">· ≤{formatUsd(maxOrder)}/order</span>
+              <span className="shrink-0 font-mono text-[11px]">· 单笔 ≤{formatUsd(maxOrder)}</span>
             )}
-            {dailyCap != null && <span className="shrink-0 font-mono text-[11px]">· {dailyCap}/day</span>}
+            {dailyCap != null && <span className="shrink-0 font-mono text-[11px]">· 每日 {dailyCap} 笔</span>}
             {expires && (
               <span className="shrink-0 text-[10px] text-muted-foreground">
-                · expires {expires.toLocaleDateString()}
+                · 到期于 {expires.toLocaleDateString()}
               </span>
             )}
           </span>
@@ -268,7 +268,7 @@ export const MandateProposalCard = memo(function MandateProposalCard({ proposal,
             )}
             {proposal.account && (
               <p className="mt-0.5 text-[11px] text-muted-foreground">
-                {proposal.account.broker} · {proposal.account.type} account · funded by {proposal.account.funded_by}
+                {proposal.account.broker} · {proposal.account.type} 账户 · 资金来源：{proposal.account.funded_by}
               </p>
             )}
           </div>

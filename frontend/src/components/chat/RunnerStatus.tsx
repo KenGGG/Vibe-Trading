@@ -39,32 +39,32 @@ function formatUsd(value: number | undefined): string {
 }
 
 function formatRelative(value: string | number | null | undefined): string {
-  if (value == null || value === "") return "never";
+  if (value == null || value === "") return i18n.t("runnerStatus.never");
   const then = typeof value === "number"
     ? (value < 1_000_000_000_000 ? value * 1000 : value)
     : new Date(value).getTime();
-  if (!Number.isFinite(then)) return "unknown";
+  if (!Number.isFinite(then)) return i18n.t("runnerStatus.unknown");
   const deltaSec = Math.round((Date.now() - then) / 1000);
-  if (deltaSec < 0) return "just now";
-  if (deltaSec < 60) return `${deltaSec}s ago`;
-  if (deltaSec < 3600) return `${Math.floor(deltaSec / 60)}m ago`;
-  if (deltaSec < 86_400) return `${Math.floor(deltaSec / 3600)}h ago`;
-  return `${Math.floor(deltaSec / 86_400)}d ago`;
+  if (deltaSec < 0) return i18n.t("runnerStatus.justNow");
+  if (deltaSec < 60) return `${deltaSec}秒前`;
+  if (deltaSec < 3600) return `${Math.floor(deltaSec / 60)}分钟前`;
+  if (deltaSec < 86_400) return `${Math.floor(deltaSec / 3600)}小时前`;
+  return `${Math.floor(deltaSec / 86_400)}天前`;
 }
 
 function formatCountdown(iso: string | undefined): { label: string; expired: boolean; soon: boolean } {
   if (!iso) return { label: "—", expired: false, soon: false };
   const target = new Date(iso).getTime();
-  if (!Number.isFinite(target)) return { label: "unknown", expired: false, soon: false };
+  if (!Number.isFinite(target)) return { label: i18n.t("runnerStatus.unknown"), expired: false, soon: false };
   const deltaSec = Math.round((target - Date.now()) / 1000);
-  if (deltaSec <= 0) return { label: "expired", expired: true, soon: false };
+  if (deltaSec <= 0) return { label: i18n.t("runnerStatus.expired"), expired: true, soon: false };
   const days = Math.floor(deltaSec / 86_400);
   const hours = Math.floor((deltaSec % 86_400) / 3600);
   const minutes = Math.floor((deltaSec % 3600) / 60);
   const soon = deltaSec < 86_400;
-  if (days > 0) return { label: `${days}d ${hours}h`, expired: false, soon };
-  if (hours > 0) return { label: `${hours}h ${minutes}m`, expired: false, soon };
-  return { label: `${minutes}m`, expired: false, soon };
+  if (days > 0) return { label: `${days}天 ${hours}小时`, expired: false, soon };
+  if (hours > 0) return { label: `${hours}小时 ${minutes}分钟`, expired: false, soon };
+  return { label: `${minutes}分钟`, expired: false, soon };
 }
 
 function summarizeLimits(limits: LiveMandateLimits | undefined): string {
@@ -72,12 +72,12 @@ function summarizeLimits(limits: LiveMandateLimits | undefined): string {
   const parts: string[] = [];
   if (limits.max_order_notional_usd != null) parts.push(`≤${formatUsd(limits.max_order_notional_usd)}/order`);
   if (limits.max_trades_per_day != null) parts.push(`${limits.max_trades_per_day}/day`);
-  if (limits.max_leverage != null) parts.push(limits.max_leverage <= 1 ? "no leverage" : `${limits.max_leverage}×`);
+  if (limits.max_leverage != null) parts.push(limits.max_leverage <= 1 ? "无杠杆" : `${limits.max_leverage}×`);
   return parts.join(" · ");
 }
 
 function fallbackAuthorizeInstruction(): string {
-  return "Run `vibe-trading connector list`, choose the broker profile, then run `vibe-trading connector authorize <profile>` from the desktop session that will hold the broker connection.";
+  return "请先运行 `vibe-trading connector list`，选择对应券商配置，再在持有券商连接的桌面会话中运行 `vibe-trading connector authorize <profile>`。";
 }
 
 function BrokerRow({
@@ -98,8 +98,8 @@ function BrokerRow({
   const mandate = broker.mandate ?? null;
   const countdown = formatCountdown(mandate?.expires_at);
   const authorizeInstruction = authorizeHint?.instruction
-    ?? (authorizeFailed ? fallbackAuthorizeInstruction() : "Loading connector authorization instructions...");
-  const authorizeNote = "The connector channel stays read-only until OAuth succeeds and a mandate is committed.";
+    ?? (authorizeFailed ? fallbackAuthorizeInstruction() : i18n.t("runnerStatus.loadingInstructions"));
+  const authorizeNote = i18n.t("runnerStatus.authorizeNote");
 
   useEffect(() => {
     let cancelled = false;
@@ -124,14 +124,14 @@ function BrokerRow({
     try {
       if (runnerAlive) {
         await api.stopLiveRunner(brokerKey);
-        toast.success(`Runner stopped for ${brokerKey}`);
+        toast.success(`${brokerKey} 运行器已停止`);
       } else {
         await api.startLiveRunner(brokerKey);
-        toast.success(`Runner started for ${brokerKey}`);
+        toast.success(`${brokerKey} 运行器已启动`);
       }
       onRefresh();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Runner control failed.");
+      toast.error(error instanceof Error ? error.message : "运行器控制失败。");
     } finally {
       setBusy(false);
     }
@@ -145,12 +145,12 @@ function BrokerRow({
           {authorized ? (
             <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-medium text-emerald-600 dark:text-emerald-400">
               <ShieldCheck className="h-2.5 w-2.5" />
-              Authorized
+              {i18n.t("runnerStatus.authorized")}
             </span>
           ) : (
             <span className="inline-flex items-center gap-1 rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
               <CircleSlash className="h-2.5 w-2.5" />
-              Not connected
+              {i18n.t("runnerStatus.notConnected")}
             </span>
           )}
         </div>
@@ -163,7 +163,7 @@ function BrokerRow({
         <div className="grid gap-1.5 rounded-md border border-dashed border-primary/30 bg-primary/5 p-2">
           <div className="flex items-center gap-1.5 text-[11px] font-medium text-primary">
             <PlugZap className="h-3 w-3 shrink-0" />
-            Connect this profile to enable connector runtime
+            {i18n.t("runnerStatus.connectProfile")}
           </div>
           <p className="text-[10px] leading-relaxed text-muted-foreground">
             {authorizeInstruction}
@@ -180,16 +180,16 @@ function BrokerRow({
             <div className="rounded-md border bg-background/60 p-2">
               <div className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
                 <CircleDot className={["h-2.5 w-2.5", runnerAlive ? "text-emerald-500" : "text-muted-foreground"].join(" ")} />
-                Runner
+                运行器
               </div>
               <div className={["mt-0.5 text-xs font-semibold", runnerAlive ? "text-emerald-600 dark:text-emerald-400" : "text-muted-foreground"].join(" ")}>
-                {runnerAlive ? "Running" : "Stopped"}
+                {runnerAlive ? i18n.t("runnerStatus.runnerRunning") : i18n.t("runnerStatus.runnerStopped")}
               </div>
             </div>
             <div className="rounded-md border bg-background/60 p-2">
               <div className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
                 <Activity className="h-2.5 w-2.5" />
-                Last tick
+                最近心跳
               </div>
               <div className="mt-0.5 text-xs font-medium text-foreground">
                 {formatRelative(broker.runner?.last_tick)}
@@ -202,7 +202,7 @@ function BrokerRow({
               <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
                   <ShieldCheck className="h-2.5 w-2.5" />
-                  Active mandate
+                  当前委托方案
                 </div>
                 {mandate.expires_at && (
                   <span
@@ -214,20 +214,20 @@ function BrokerRow({
                           ? "bg-amber-500/10 text-amber-600 dark:text-amber-400"
                           : "bg-muted text-muted-foreground",
                     ].join(" ")}
-                    title={`Expires ${new Date(mandate.expires_at).toLocaleString()}`}
+                    title={`到期时间：${new Date(mandate.expires_at).toLocaleString()}`}
                   >
                     <Clock className="h-2.5 w-2.5" />
-                    {countdown.expired ? "expired" : `expires in ${countdown.label}`}
+                    {countdown.expired ? i18n.t("runnerStatus.expired") : i18n.t("runnerStatus.expiresIn", { time: countdown.label })}
                   </span>
                 )}
               </div>
               <div className="mt-0.5 font-mono text-[11px] text-foreground">
-                {summarizeLimits(mandate.limits) || "limits unavailable"}
+                {summarizeLimits(mandate.limits) || i18n.t("runnerStatus.limitsUnavailable")}
               </div>
             </div>
           ) : (
             <div className="rounded-md border border-dashed bg-background/40 p-2 text-[10px] text-muted-foreground">
-              No active mandate. Ask the agent to propose one, then commit it before starting the connector runtime.
+              {i18n.t("runnerStatus.noActiveMandate")}
             </div>
           )}
 
@@ -235,11 +235,11 @@ function BrokerRow({
             {halted ? (
               <span className="inline-flex items-center gap-1 text-[10px] font-medium text-destructive">
                 <OctagonX className="h-3 w-3" />
-                Halted — runner controls disabled
+                {i18n.t("runnerStatus.haltedControlsDisabled")}
               </span>
             ) : (
               <span className="text-[10px] text-muted-foreground">
-                {runnerAlive ? "Runtime active inside mandate" : "Idle"}
+                {runnerAlive ? i18n.t("runnerStatus.runtimeActive") : i18n.t("runnerStatus.idle")}
               </span>
             )}
             <button
@@ -252,10 +252,10 @@ function BrokerRow({
                   ? "border-destructive/40 text-destructive hover:bg-destructive/10"
                   : "border-primary/40 text-primary hover:bg-primary/10",
               ].join(" ")}
-              title={runnerAlive ? "Stop the persistent runner" : "Start the persistent runner"}
+              title={runnerAlive ? i18n.t("runnerStatus.stopRunner") : i18n.t("runnerStatus.startRunner")}
             >
               {busy ? <Loader2 className="h-3 w-3 animate-spin" /> : <Power className="h-3 w-3" />}
-              {runnerAlive ? "Stop runner" : "Start runner"}
+              {runnerAlive ? i18n.t("runnerStatus.stopRunner") : i18n.t("runnerStatus.startRunner")}
             </button>
           </div>
         </>
@@ -291,24 +291,24 @@ export const RunnerStatus = memo(function RunnerStatus({ status, unavailable, ha
         type="button"
         onClick={() => setOpen((v) => !v)}
         className="inline-flex max-w-full items-center gap-1.5 justify-self-start rounded-lg bg-primary/10 px-2.5 py-1 text-left text-xs font-medium text-primary transition-colors hover:bg-primary/15"
-        aria-label="Connector runtime status"
+        aria-label="连接器运行时状态"
         aria-expanded={open}
       >
         <Activity className="h-3 w-3 shrink-0" />
         <span className="shrink-0">{i18n.t("runnerStatus.connectorRuntime")}</span>
         <span className="truncate text-muted-foreground">
-          {authorizedCount > 0 ? `${authorizedCount} connected` : "no connector connected"}
+          {authorizedCount > 0 ? i18n.t("runnerStatus.connected", { count: authorizedCount }) : i18n.t("runnerStatus.noConnector")}
         </span>
         {anyRunning && !isHalted && (
           <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-medium text-emerald-600 dark:text-emerald-400">
             <CircleDot className="h-2.5 w-2.5" />
-            running
+            {i18n.t("runnerStatus.running")}
           </span>
         )}
         {isHalted && (
           <span className="inline-flex items-center gap-1 rounded-full bg-destructive/10 px-1.5 py-0.5 text-[10px] font-medium text-destructive">
             <OctagonX className="h-2.5 w-2.5" />
-            halted
+            {i18n.t("runnerStatus.halted")}
           </span>
         )}
         <ChevronDown className={["h-3 w-3 shrink-0 transition-transform", open ? "rotate-180" : ""].join(" ")} aria-hidden="true" />
